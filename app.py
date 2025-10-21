@@ -1,7 +1,6 @@
-import sys
 from PyQt6.QtCore import Qt, pyqtSignal
-from PyQt6.QtWidgets import QWidget, QVBoxLayout, QHBoxLayout, QSlider, QLabel, QPushButton, QApplication
-from PyQt6.QtGui import QFont
+from PyQt6.QtWidgets import QWidget, QVBoxLayout, QHBoxLayout, QSlider, QLabel, QPushButton, QApplication, QSystemTrayIcon, QMenu
+from PyQt6.QtGui import QFont, QIcon, QAction
 
 class App(QWidget):
     opacity_changed = pyqtSignal(float)
@@ -31,10 +30,31 @@ class App(QWidget):
         title_label.setFont(QFont('Microsoft JhengHei', 13, QFont.Weight.Bold))
         title_label.setStyleSheet('color: #ffb634;')
         
+        # Minimize button setup
+        self.min_btn = QPushButton('–', self)
+        self.min_btn.setFixedSize(35, 30)
+        self.min_btn.clicked.connect(self.hide)
+        self.min_btn.setStyleSheet('''
+            QPushButton {
+                background-color: transparent;
+                color: #ffb634;
+                border: none;
+                font-size: 24px;
+                font-weight: bold;
+                padding-bottom: 3px;
+                text-align: center;
+            }
+            QPushButton:hover {
+                background-color: #ffb634;
+                color: #242424;
+                border-radius: 0px;
+            }
+        ''')
+        
         # Close button setup
         self.close_btn = QPushButton('×', self)
         self.close_btn.setFixedSize(35, 30)
-        self.close_btn.clicked.connect(self.close)
+        self.close_btn.clicked.connect(self.quit_app)
         self.close_btn.setStyleSheet('''
             QPushButton {
                 background-color: transparent;
@@ -123,8 +143,9 @@ class App(QWidget):
             }
         ''')
         
-        # Position close button at top-right corner
+        # Position buttons at top-right corner
         self.close_btn.move(self.width() - self.close_btn.width(), 0)
+        self.min_btn.move(self.width() - self.close_btn.width() - self.min_btn.width() - 5, 0)
         
         # Position in bottom right corner
         screen = QApplication.primaryScreen().availableGeometry()
@@ -132,6 +153,33 @@ class App(QWidget):
         y = screen.height() - self.height()
         self.move(x, y)
         
+        # System tray setup
+        self.tray_icon = QSystemTrayIcon(self)
+        self.tray_icon.setIcon(QIcon('public/Dimmer.ico'))
+        self.tray_icon.setToolTip('Dimmer')
+        
+        # Create tray menu
+        tray_menu = QMenu()
+        quit_action = QAction('Quit', self)
+        quit_action.triggered.connect(self.quit_app)
+        
+        tray_menu.addAction(quit_action)
+        
+        self.tray_icon.setContextMenu(tray_menu)
+        self.tray_icon.activated.connect(self.on_tray_icon_activated)
+        self.tray_icon.show()
+        
     def on_opacity_changed(self, value):
         self.value_label.setText(f'{value}%')
         self.opacity_changed.emit(value * 0.8 / 100) # Cap at 80% opacity
+    
+    def on_tray_icon_activated(self, reason):
+        if reason == QSystemTrayIcon.ActivationReason.Trigger:
+            if self.isVisible():
+                self.hide()
+            else:
+                self.show()
+    
+    def quit_app(self):
+        self.tray_icon.hide()
+        QApplication.quit()
