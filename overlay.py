@@ -3,6 +3,7 @@ import ctypes
 import signal
 from PyQt6.QtCore import Qt, QTimer
 from PyQt6.QtWidgets import QApplication, QWidget
+from app import App
 
 class Overlay(QWidget):
     def __init__(self):
@@ -20,7 +21,7 @@ class Overlay(QWidget):
         
         # Window setup
         self.setGeometry(QApplication.primaryScreen().geometry())
-        self.setWindowOpacity(0.9)
+        self.setWindowOpacity(0.5)
         self.setStyleSheet("background-color: rgb(0, 0, 0);")
         self.show()
         
@@ -32,8 +33,13 @@ class Overlay(QWidget):
             print("Warning: SetWindowDisplayAffinity failed. May appear in screenshots.")
 
 if __name__ == '__main__':
-    app = QApplication(sys.argv)
+    dimmer = QApplication(sys.argv)
     overlay = Overlay()
+    
+    # Create app UI
+    app = App()
+    app.opacity_changed.connect(overlay.setWindowOpacity)
+    app.show()
     
     ########## ########## ########## Allows Ctrl + C in terminal to exit ########## ########## ##########
     signal.signal(signal.SIGINT, signal.SIG_DFL)
@@ -42,4 +48,4 @@ if __name__ == '__main__':
     timer.start(100)  # Check every 100ms
     ########## ########## ########## ########## ########## ########## ########## ########## ####
     
-    sys.exit(app.exec())
+    sys.exit(dimmer.exec())
