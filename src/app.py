@@ -221,8 +221,8 @@ class App(QWidget):
         painter.drawRoundedRect(rect, radius, radius)
 
     def load_opacity(self):
-        config_file = "config/opacity_config.json"
-        default_opacity = 50
+        config_file = "./config/opacity_config.json"
+        default_opacity = 30
 
         if os.path.exists(config_file):
             try:
@@ -235,7 +235,7 @@ class App(QWidget):
         return default_opacity
 
     def save_opacity(self, opacity: int):
-        config_file = "config/opacity_config.json"
+        config_file = "./config/opacity_config.json"
         try:
             with open(config_file, 'w') as f:
                 json.dump({'opacity': int(opacity)}, f)

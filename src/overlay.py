@@ -41,11 +41,4 @@ if __name__ == '__main__':
     app.opacity_changed.connect(overlay.setWindowOpacity)
     app.show()
     
-    ########## ########## ########## Allows Ctrl + C in terminal to exit ########## ########## ##########
-    signal.signal(signal.SIGINT, signal.SIG_DFL)
-    timer = QTimer()
-    timer.timeout.connect(lambda: None)  # Do nothing, just wake up
-    timer.start(100)  # Check every 100ms
-    ########## ########## ########## ########## ########## ########## ########## ########## ####
-    
     sys.exit(dimmer.exec())
