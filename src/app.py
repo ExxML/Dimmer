@@ -1,8 +1,10 @@
+from overlay import Overlay
 from PyQt6.QtCore import Qt, pyqtSignal
-from PyQt6.QtWidgets import QWidget, QVBoxLayout, QHBoxLayout, QSlider, QLabel, QPushButton, QApplication, QSystemTrayIcon, QMenu
 from PyQt6.QtGui import QFont, QIcon, QAction, QPainter, QPen, QColor
-import json
+from PyQt6.QtWidgets import QWidget, QVBoxLayout, QHBoxLayout, QSlider, QLabel, QPushButton, QApplication, QSystemTrayIcon, QMenu
 import os
+import sys
+import json
 
 class TickBar(QWidget):
     def __init__(self, slider, parent = None):
@@ -257,3 +259,14 @@ class App(QWidget):
     def quit_app(self):
         self.tray_icon.hide()
         QApplication.quit()
+
+if __name__ == '__main__':
+    dimmer = QApplication(sys.argv)
+    overlay = Overlay()
+
+    # Create app UI
+    app = App()
+    app.opacity_changed.connect(overlay.setWindowOpacity)
+    app.show()
+
+    sys.exit(dimmer.exec())
