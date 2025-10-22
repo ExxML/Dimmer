@@ -47,7 +47,8 @@ class App(QWidget):
         # Set window flags to stay on top
         self.setWindowFlags(
             Qt.WindowType.WindowStaysOnTopHint |
-            Qt.WindowType.FramelessWindowHint
+            Qt.WindowType.FramelessWindowHint |
+            Qt.WindowType.Tool
         )
         
         # Main layout
