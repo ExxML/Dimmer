@@ -1,6 +1,6 @@
 <div align="center">
 
-<img src="public/Dimmer.ico" alt="Dimmer Icon" width="128" height="128"> 
+<img src="public/Dimmer.ico" alt="Dimmer Icon" width="160" height="160">
 
 # Dimmer
 
