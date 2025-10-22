@@ -1,5 +1,3 @@
 __pycache__/
 dimmer.build
 dimmer.dist
-dimmer.onefile-build
-dimmer.exe
