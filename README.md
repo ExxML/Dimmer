@@ -8,13 +8,12 @@
 
 *Reduce eye strain and create the perfect ambiance with a simple, elegant screen overlay*
 
-[![Python](https://img.shields.io/badge/Python-3.10+-blue.svg)](https://www.python.org/downloads/)
+[![Python](https://img.shields.io/badge/Python-3.12-blue.svg)](https://www.python.org/downloads/)
 [![PyQt6](https://img.shields.io/badge/PyQt6-6.9.1-green.svg)](https://pypi.org/project/PyQt6/)
 [![License: MIT](https://img.shields.io/badge/License-MIT-orange.svg)](https://opensource.org/licenses/MIT)
 [![Platform: Windows](https://img.shields.io/badge/Platform-Windows-royalblue.svg)](https://www.microsoft.com/en-us/windows)
 
-[✨ Features](#-features) • [📖 Usage](#-usage) • [🚀 Installation](#-installation) • [🖼️ Preview](#-preview)
-
+[✨ Features](#-features) • [🖼️ Preview](#%EF%B8%8F-preview) • [📖 Usage](#-usage) • [🚀 Installation](#-installation)
 </div>
 
 ---
@@ -34,6 +33,12 @@
 - **🎨 Minimalistic UI** - Clean dark theme UI with smooth graphics
 
 - **⚡ Lightweight** - Minimal resource usage with optimized performance
+
+## 🖼️ Preview
+
+### App Interface
+
+![Dimmer Interface](./public/Dimmer_Preview.png)
 
 ## 📖 Usage
 
@@ -55,13 +60,13 @@
 
 ### Prerequisites
 - Windows 10 or 11
-- Python 3.10+
+- Python 3.12 (Nuitka compiler will not work with 3.13)
 
 ### Quick Setup
 
 1. Clone the repository
    ```bash
-   git clone https://github.com/yourusername/dimmer.git
+   git clone https://github.com/ExxML/dimmer.git
    cd dimmer
    ```
 
@@ -81,11 +86,12 @@
    python src/app.py
    ```
 
-## 🖼️ Preview
+5. Compile .exe using Nuitka
+   ```bash
+   python -m nuitka --onefile --windows-icon-from-ico="public/Dimmer.ico" --windows-console-mode=disable --enable-plugin=pyqt6 --include-data-dir="config=config" src/app.py
+   ```
 
-### App Interface
-
-![Dimmer Interface](./public/Dimmer_Preview.png)
+   **Note:** Win32 calls are used in this program to ensure the overlay stays on top. Windows Defender may flag this as a virus. Add `app.exe` as an exclusion in `Settings > Privacy & Security > Windows Security > Virus & Threat Protection > Manage settings > Exclusions > Add an exclusion`.
 
 ## 📁 Project Structure
 ```
