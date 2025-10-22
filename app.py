@@ -1,6 +1,35 @@
 from PyQt6.QtCore import Qt, pyqtSignal
 from PyQt6.QtWidgets import QWidget, QVBoxLayout, QHBoxLayout, QSlider, QLabel, QPushButton, QApplication, QSystemTrayIcon, QMenu
-from PyQt6.QtGui import QFont, QIcon, QAction
+from PyQt6.QtGui import QFont, QIcon, QAction, QPainter, QPen, QColor
+
+class TickBar(QWidget):
+    def __init__(self, slider, parent=None):
+        super().__init__(parent)
+        self.slider = slider
+        self.setFixedHeight(10)
+
+    def paintEvent(self, event):
+        painter = QPainter(self)
+        w = self.width()
+        h = self.height()
+
+        minor_pen = QPen(QColor("#8a8a8a"))
+        minor_pen.setWidth(1)
+        major_pen = QPen(QColor("#ffb634"))
+        major_pen.setWidth(1)
+
+        # Draw 11 ticks from 0% to 100% inclusive
+        for i in range(11):
+            # Add padding to ensure first and last ticks are visible
+            x = 5 + round(i * (w - 10) / 10)
+            if i % 5 == 0:  # Major ticks at 0%, 50%, 100%
+                painter.setPen(major_pen)
+                length = 7
+            else:  # Minor ticks at 10%, 20%, 30%, 40%, 60%, 70%, 80%, 90%
+                painter.setPen(minor_pen)
+                length = 5
+            painter.drawLine(x, h - length, x, h - 1)
+        painter.end()
 
 class App(QWidget):
     opacity_changed = pyqtSignal(float)
@@ -12,10 +41,11 @@ class App(QWidget):
     def initUI(self):
         # Window setup
         self.setWindowTitle('Dimmer')
-        self.setFixedSize(280, 120)
+        self.setFixedSize(280, 140)
         
         # Set window flags to stay on top
         self.setWindowFlags(
+            Qt.WindowType.WindowStaysOnTopHint |
             Qt.WindowType.FramelessWindowHint
         )
         
@@ -81,11 +111,10 @@ class App(QWidget):
         
         # Slider
         self.slider = QSlider(Qt.Orientation.Horizontal)
+        self.slider.setFixedHeight(20)
         self.slider.setMinimum(0)
         self.slider.setMaximum(100)
         self.slider.setValue(50)
-        self.slider.setTickPosition(QSlider.TickPosition.TicksBelow)
-        self.slider.setTickInterval(10)
         self.slider.valueChanged.connect(self.on_opacity_changed)
         
         self.slider.setStyleSheet('''
@@ -112,7 +141,7 @@ class App(QWidget):
         
         # Value label below slider
         self.value_label = QLabel('50%')
-        self.value_label.setFont(QFont('Microsoft JhengHei', 9))
+        self.value_label.setFont(QFont('Microsoft JhengHei', 10))
         self.value_label.setStyleSheet('''
             color: #ffffff;
             background-color: #3a3a3a;
@@ -123,10 +152,12 @@ class App(QWidget):
         
         # Container to align label to the right
         value_container = QHBoxLayout()
+        value_container.setContentsMargins(0, 10, 0, 0)  # Add top margin to push label down
         value_container.addStretch()
         value_container.addWidget(self.value_label)
         
         opacity_layout.addWidget(self.slider)
+        opacity_layout.addWidget(TickBar(self.slider))
         opacity_layout.addLayout(value_container)
         
         # Add all to main layout
