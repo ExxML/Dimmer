@@ -6,7 +6,7 @@
 
 ### A minimalistic screen dimmer for Windows
 
-*Reduce eye strain and create the perfect ambiance with a simple, elegant screen overlay*
+*Reduce eye strain and set the perfect ambiance with a simple dimmer overlay*
 
 [![Python](https://img.shields.io/badge/Python-3.12-blue.svg)](https://www.python.org/downloads/)
 [![PyQt6](https://img.shields.io/badge/PyQt6-6.9.1-green.svg)](https://pypi.org/project/PyQt6/)
