@@ -1,9 +1,11 @@
 from PyQt6.QtCore import Qt, pyqtSignal
 from PyQt6.QtWidgets import QWidget, QVBoxLayout, QHBoxLayout, QSlider, QLabel, QPushButton, QApplication, QSystemTrayIcon, QMenu
 from PyQt6.QtGui import QFont, QIcon, QAction, QPainter, QPen, QColor
+import json
+import os
 
 class TickBar(QWidget):
-    def __init__(self, slider, parent=None):
+    def __init__(self, slider, parent = None):
         super().__init__(parent)
         self.slider = slider
         self.setFixedHeight(10)
@@ -117,7 +119,8 @@ class App(QWidget):
         self.slider.setFixedHeight(20)
         self.slider.setMinimum(0)
         self.slider.setMaximum(100)
-        self.slider.setValue(50)
+        saved_opacity = self.load_opacity()
+        self.slider.setValue(saved_opacity)
         self.slider.valueChanged.connect(self.on_opacity_changed)
         
         self.slider.setStyleSheet('''
@@ -143,7 +146,7 @@ class App(QWidget):
         ''')
         
         # Value label below slider
-        self.value_label = QLabel('50%')
+        self.value_label = QLabel(f"{self.slider.value()}%")
         self.value_label.setFont(QFont('Microsoft JhengHei', 10))
         self.value_label.setStyleSheet('''
             color: #ffffff;
@@ -217,9 +220,32 @@ class App(QWidget):
         painter.setPen(Qt.PenStyle.NoPen)
         painter.drawRoundedRect(rect, radius, radius)
 
+    def load_opacity(self):
+        config_file = "config/opacity_config.json"
+        default_opacity = 50
+
+        if os.path.exists(config_file):
+            try:
+                with open(config_file, 'r') as f:
+                    data = json.load(f)
+                    return int(data.get('opacity', default_opacity))
+            except Exception:
+                pass
+
+        return default_opacity
+
+    def save_opacity(self, opacity: int):
+        config_file = "config/opacity_config.json"
+        try:
+            with open(config_file, 'w') as f:
+                json.dump({'opacity': int(opacity)}, f)
+        except Exception:
+            pass
+
     def on_opacity_changed(self, value):
         self.value_label.setText(f'{value}%')
         self.opacity_changed.emit(value * 0.8 / 100) # Cap at 80% opacity
+        self.save_opacity(value)
     
     def on_tray_icon_activated(self, reason):
         if reason == QSystemTrayIcon.ActivationReason.Trigger:
