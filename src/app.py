@@ -121,8 +121,7 @@ class App(QWidget):
         self.slider.setFixedHeight(20)
         self.slider.setMinimum(0)
         self.slider.setMaximum(100)
-        saved_opacity = self.load_opacity()
-        self.slider.setValue(saved_opacity)
+        self.slider.setValue(self.load_opacity())
         self.slider.valueChanged.connect(self.on_opacity_changed)
         
         self.slider.setStyleSheet('''
@@ -147,26 +146,26 @@ class App(QWidget):
             }
         ''')
         
-        # Value label below slider
-        self.value_label = QLabel(f"{self.slider.value()}%")
-        self.value_label.setFont(QFont('Microsoft JhengHei', 10))
-        self.value_label.setStyleSheet('''
+        # Opacity label below slider
+        self.opacity_label = QLabel(f"{self.slider.value()}%")
+        self.opacity_label.setFont(QFont('Microsoft JhengHei', 10))
+        self.opacity_label.setStyleSheet('''
             color: #ffffff;
             background-color: #3a3a3a;
             border-radius: 6px;
             padding: 4px 8px;
         ''')
-        self.value_label.setAlignment(Qt.AlignmentFlag.AlignCenter)
+        self.opacity_label.setAlignment(Qt.AlignmentFlag.AlignCenter)
         
         # Container to align label to the right
-        value_container = QHBoxLayout()
-        value_container.setContentsMargins(0, 10, 0, 0)  # Add top margin to push label down
-        value_container.addStretch()
-        value_container.addWidget(self.value_label)
+        opacity_label_container = QHBoxLayout()
+        opacity_label_container.setContentsMargins(0, 10, 0, 0)  # Add top margin to push label down
+        opacity_label_container.addStretch()
+        opacity_label_container.addWidget(self.opacity_label)
         
         opacity_layout.addWidget(self.slider)
         opacity_layout.addWidget(TickBar(self.slider))
-        opacity_layout.addLayout(value_container)
+        opacity_layout.addLayout(opacity_label_container)
         
         # Add all to main layout
         main_layout.addLayout(title_bar)
@@ -223,17 +222,16 @@ class App(QWidget):
         painter.drawRoundedRect(rect, radius, radius)
 
     def load_opacity(self):
+        default_opacity = 20
         config_file = "./config/opacity_config.json"
-        default_opacity = 30
-
         if os.path.exists(config_file):
             try:
                 with open(config_file, 'r') as f:
                     data = json.load(f)
-                    return int(data.get('opacity', default_opacity))
+                    return int(data.get('opacity', default_opacity)) # Default opacity to 20% if config not found
             except Exception:
+                print("Error loading opacity config")
                 pass
-
         return default_opacity
 
     def save_opacity(self, opacity: int):
@@ -242,12 +240,13 @@ class App(QWidget):
             with open(config_file, 'w') as f:
                 json.dump({'opacity': int(opacity)}, f)
         except Exception:
+            print("Error saving opacity config")
             pass
 
-    def on_opacity_changed(self, value):
-        self.value_label.setText(f'{value}%')
-        self.opacity_changed.emit(value * 0.8 / 100) # Cap at 80% opacity
-        self.save_opacity(value)
+    def on_opacity_changed(self, opacity):
+        self.opacity_label.setText(f'{opacity}%')
+        self.opacity_changed.emit(opacity * 0.8 / 100) # Cap at 80% opacity
+        self.save_opacity(opacity)
     
     def on_tray_icon_activated(self, reason):
         if reason == QSystemTrayIcon.ActivationReason.Trigger:
@@ -266,6 +265,7 @@ if __name__ == '__main__':
 
     # Create app UI
     app = App()
+    overlay.setWindowOpacity(app.load_opacity() * 0.8 / 100)
     app.opacity_changed.connect(overlay.setWindowOpacity)
     app.show()
 

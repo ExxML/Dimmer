@@ -18,7 +18,6 @@ class Overlay(QWidget):
         
         # Window setup
         self.setGeometry(QApplication.primaryScreen().geometry())
-        self.setWindowOpacity(0.5)
         self.setStyleSheet("background-color: rgb(0, 0, 0);")
         self.show()
         
