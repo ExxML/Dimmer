@@ -267,6 +267,6 @@ if __name__ == '__main__':
     app = App()
     overlay.setWindowOpacity(app.load_opacity() * 0.8 / 100)
     app.opacity_changed.connect(overlay.setWindowOpacity)
-    app.show()
+    app.hide() # Start minimized on start-up
 
     sys.exit(dimmer.exec())
