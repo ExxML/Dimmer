@@ -53,7 +53,7 @@
 5. Close the application by clicking the X button or quit via the system tray menu
 
 6. *[Optional]* Set up auto-run on startup:
-   - Create a shortcut for `app.exe`
+   - Create a shortcut for `dimmer.exe`
    - Move the shortcut to the Startup folder (open with `Win + R` and type `shell:startup`)
 
 ## 🚀 Installation
@@ -83,21 +83,21 @@
 
 4. Run the application
    ```bash
-   python src/app.py
+   python src/dimmer.py
    ```
 
 5. Compile .exe using Nuitka
    ```bash
-   python -m nuitka --onefile --windows-icon-from-ico="public/Dimmer.ico" --windows-console-mode=disable --enable-plugin=pyqt6 --include-data-dir="config=config" src/app.py
+   python -m nuitka --onefile --windows-icon-from-ico="public/Dimmer.ico" --windows-console-mode=disable --enable-plugin=pyqt6 --include-data-dir="config=config" --include-data-dir="public=public" src/dimmer.py
    ```
 
-   **Note:** Win32 calls are used in this program to ensure the overlay stays on top. Windows Defender may flag this as a virus. Add `app.exe` as an exclusion in `Settings > Privacy & Security > Windows Security > Virus & Threat Protection > Manage settings > Exclusions > Add an exclusion`.
+   **Note:** Win32 calls are used in this program to ensure the overlay stays on top. Windows Defender may flag this as a virus. Add `dimmer.exe` as an exclusion in `Settings > Privacy & Security > Windows Security > Virus & Threat Protection > Manage settings > Exclusions > Add an exclusion`.
 
 ## 📁 Project Structure
 ```
 dimmer/
 ├── src/
-│   ├── app.py               # Main application and UI
+│   ├── dimmer.py               # Main application and UI
 │   └── overlay.py           # Screen overlay implementation
 ├── config/
 │   └── opacity_config.json  # Persistent settings
