@@ -42,7 +42,8 @@ class App(QWidget):
         # Window setup
         self.setWindowTitle('Dimmer')
         self.setFixedSize(280, 140)
-        
+        self.setAttribute(Qt.WidgetAttribute.WA_TranslucentBackground) # Translucent bg for rounded corners
+
         # Set window flags to stay on top
         self.setWindowFlags(
             Qt.WindowType.WindowStaysOnTopHint |
@@ -99,6 +100,7 @@ class App(QWidget):
                 background-color: #ffb634;
                 color: #242424;
                 border-radius: 0px;
+                border-top-right-radius: 8px;
             }
         ''')
         
@@ -200,6 +202,20 @@ class App(QWidget):
         self.tray_icon.activated.connect(self.on_tray_icon_activated)
         self.tray_icon.show()
         
+    # Override paintEvent to render rounded corners on app window
+    def paintEvent(self, event):
+        painter = QPainter(self)
+        painter.setRenderHint(QPainter.RenderHint.Antialiasing)
+        
+        # Rounded rectangle background
+        rect = self.rect()
+        color = QColor("#242424")
+        radius = 8
+
+        painter.setBrush(color)
+        painter.setPen(Qt.PenStyle.NoPen)
+        painter.drawRoundedRect(rect, radius, radius)
+
     def on_opacity_changed(self, value):
         self.value_label.setText(f'{value}%')
         self.opacity_changed.emit(value * 0.8 / 100) # Cap at 80% opacity
