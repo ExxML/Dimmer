@@ -54,7 +54,7 @@
 
 6. *[Optional]* Set up auto-run on startup:
    - Create a shortcut for `app.exe`
-   - Move the shortcut to the Startup folder (press `Win + R` and type `shell:startup`)
+   - Move the shortcut to the Startup folder (open with `Win + R` and type `shell:startup`)
 
 ## 🚀 Installation
 
