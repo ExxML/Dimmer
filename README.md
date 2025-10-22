@@ -88,7 +88,7 @@
 
 5. Compile .exe using Nuitka
    ```bash
-   python -m nuitka --onefile --windows-icon-from-ico="public/Dimmer.ico" --windows-console-mode=disable --enable-plugin=pyqt6 --include-data-dir="config=config" --include-data-dir="public=public" src/dimmer.py
+   python -m nuitka --standalone --windows-icon-from-ico="public/Dimmer.ico" --windows-console-mode=disable --enable-plugin=pyqt6 --include-data-dir="config=config" --include-data-dir="public=public" src/dimmer.py
    ```
 
    **Note:** Win32 calls are used in this program to ensure the overlay stays on top. Windows Defender may flag this as a virus. Add `dimmer.exe` as an exclusion in `Settings > Privacy & Security > Windows Security > Virus & Threat Protection > Manage settings > Exclusions > Add an exclusion`.
