@@ -193,7 +193,7 @@ class App(QWidget):
         
         # System tray setup
         self.tray_icon = QSystemTrayIcon(self)
-        self.tray_icon.setIcon(QIcon('public/Dimmer.ico'))
+        self.tray_icon.setIcon(QIcon('./public/Dimmer.ico'))
         self.tray_icon.setToolTip('Dimmer')
         
         # Create tray menu
