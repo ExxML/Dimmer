@@ -1,5 +1,5 @@
 import ctypes
-from PyQt6.QtCore import Qt
+from PyQt6.QtCore import Qt, QTimer
 from PyQt6.QtWidgets import QApplication, QWidget
 
 class Overlay(QWidget):
@@ -27,3 +27,8 @@ class Overlay(QWidget):
         result = ctypes.windll.user32.SetWindowDisplayAffinity(hwnd, WDA_EXCLUDEFROMCAPTURE)
         if result == 0:
             print("Warning: SetWindowDisplayAffinity failed. May appear in screenshots.")
+        
+        # Setup timer to raise overlay so it is always visible (certain Windows operations override the stay on top hint)
+        self.raise_timer = QTimer()
+        self.raise_timer.timeout.connect(self.raise_)
+        self.raise_timer.start(10)
