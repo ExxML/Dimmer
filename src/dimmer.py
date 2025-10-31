@@ -222,13 +222,13 @@ class App(QWidget):
         painter.drawRoundedRect(rect, radius, radius)
 
     def load_opacity(self):
-        default_opacity = 20
+        default_opacity = 40
         config_file = "./config/opacity_config.json"
         if os.path.exists(config_file):
             try:
                 with open(config_file, 'r') as f:
                     data = json.load(f)
-                    return int(data.get('opacity', default_opacity)) # Default opacity to 20% if config not found
+                    return int(data.get('opacity', default_opacity)) # Default opacity if config not found
             except Exception:
                 print("Error loading opacity config")
                 pass
